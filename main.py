@@ -13,8 +13,14 @@ import os
 
 app = Flask(__name__)
 
-# allow requests from website
-CORS(app, origins=['https://milesnewland.com'])
+# allow requests from website (including www and http variants)
+CORS(app, origins=[
+    'https://milesnewland.com',
+    'https://www.milesnewland.com',
+    'http://milesnewland.com',
+    'http://www.milesnewland.com',
+    'http://localhost:3000',
+])
 
 # these will be set as environment variables (or you can hardcode for testing)
 CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', 'your_client_id_here')
