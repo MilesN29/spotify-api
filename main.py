@@ -16,9 +16,6 @@ app = Flask(__name__)
 # allow requests from website (including www and http variants)
 CORS(app, origins=[
     'https://milesnewland.com',
-    'https://www.milesnewland.com',
-    'http://milesnewland.com',
-    'http://www.milesnewland.com',
     'http://localhost:3000',
 ])
 
