@@ -22,9 +22,9 @@ cd gcp-spotify-function
 pip install -r requirements.txt
 
 # set environment variables
-$env:SPOTIFY_CLIENT_ID="your_client_id"
-$env:SPOTIFY_CLIENT_SECRET="your_client_secret"
-$env:SPOTIFY_REFRESH_TOKEN="your_refresh_token"
+$env:SPOTIFY_CLIENT_ID="client_id"
+$env:SPOTIFY_CLIENT_SECRET="client_secret"
+$env:SPOTIFY_REFRESH_TOKEN="refresh_token"
 
 # run the server
 python main.py
@@ -45,7 +45,7 @@ Server will run at `http://localhost:5000`
 
 ```powershell
 gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
+gcloud config set project PROJECT_ID
 ```
 
 ### Step 2: Enable Required APIs
@@ -76,51 +76,49 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 ```powershell
 cd gcp-spotify-function
 
-docker build -t us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v1 .
+docker build -t us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v1 .
 ```
 
 ### Step 6: Push to Artifact Registry
 
 ```powershell
-docker push us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v1
+docker push us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v1
 ```
 
 ### Step 7: Deploy to Cloud Run
 
 ```powershell
 gcloud run deploy spotify-api `
-  --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v1 `
+  --image us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v1 `
   --region us-central1 `
   --platform managed `
   --allow-unauthenticated `
-  --set-env-vars="SPOTIFY_CLIENT_ID=your_client_id,SPOTIFY_CLIENT_SECRET=your_client_secret,SPOTIFY_REFRESH_TOKEN=your_refresh_token"
+  --set-env-vars="SPOTIFY_CLIENT_ID=client_id,SPOTIFY_CLIENT_SECRET=client_secret,SPOTIFY_REFRESH_TOKEN=refresh_token"
 ```
 
-### Step 8: Get Your Service URL
+### Step 8: Get The Service URL
 
-After deployment, you'll see output like:
+After deployment, output like:
 ```
 Service URL: https://spotify-api-xxxxxxxxxx-uc.a.run.app
 ```
 
-Save this URL - you'll use it in your React app!
-
 ---
 
-## Updating Your Deployment
+## Updating Deployment
 
-When you make changes to `main.py`:
+When making changes to `main.py`:
 
 ```powershell
 # build new version
-docker build -t us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v2 .
+docker build -t us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v2 .
 
 # push new version
-docker push us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v2
+docker push us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v2
 
 # deploy new version
 gcloud run deploy spotify-api `
-  --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api/spotify-flask:v2 `
+  --image us-central1-docker.pkg.dev/PROJECT_ID/spotify-api/spotify-flask:v2 `
   --region us-central1
 ```
 
@@ -128,7 +126,7 @@ gcloud run deploy spotify-api `
 
 ## Updating Environment Variables
 
-If you need to update your Spotify tokens:
+If need to update the Spotify tokens:
 
 ```powershell
 gcloud run services update spotify-api `
@@ -138,9 +136,9 @@ gcloud run services update spotify-api `
 
 ---
 
-## Test Your Deployment
+## Test Deployment
 
-Visit `YOUR_SERVICE_URL/all` in a browser. You should see JSON like:
+Visit `SERVICE_URL/all` in a browser. Should see JSON like:
 
 ```json
 {
@@ -167,23 +165,5 @@ gcloud run services describe spotify-api --region us-central1
 
 ### List Images in Artifact Registry
 ```powershell
-gcloud artifacts docker images list us-central1-docker.pkg.dev/YOUR_PROJECT_ID/spotify-api
+gcloud artifacts docker images list us-central1-docker.pkg.dev/PROJECT_ID/spotify-api
 ```
-
----
-
-## Security Notes
-
-- Never commit your credentials to Git!
-- Credentials are stored as environment variables in Cloud Run, not in code
-- The Flask server only allows requests from your website (CORS)
-- Use `--no-allow-unauthenticated` if you want to restrict access
-
-## Cost
-
-GCP Cloud Run free tier includes:
-- 2 million requests/month
-- 360,000 GB-seconds of memory
-- 180,000 vCPU-seconds
-
-Your portfolio will use a tiny fraction of this - essentially free!
